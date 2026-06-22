@@ -143,7 +143,9 @@ Su codificacion en la cinta es:
 
 #### Cinta inicial
 
-```text
 ... ␣ ␣ p 1 # n 1 1 ␣ ␣ ...
         ↑
-``
+#### Cinta final
+
+
+␣ ␣ V:x1,x2|E:(x1t,x2f),(x2f,x1t)|w:((x1t,x2f),1),((x2f,x1t),1)|P:[]|X:[(x1f,x2t)]|k:10 ␣ ␣
