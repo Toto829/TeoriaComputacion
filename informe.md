@@ -116,3 +116,48 @@ Se define una Maquina de Turing M que decide SAT de la siguiente forma:
 5. Si todas las clausulas son verdaderas, la maquina acepta.
 
 ---
+## 2.1 Codificacion de la reduccion en Maquina de Turing
+
+Se define el problema A como 3-SAT y el problema B como SAT.
+
+El problema 3-SAT consiste en determinar si una formula booleana en CNF donde cada clausula tiene exactamente 3 literales es satisfacible.
+
+El problema SAT consiste en determinar si una formula CNF arbitraria es satisfacible.
+
+### Definicion de la reduccion
+
+La funcion de reduccion se define como:
+
+reduceAToB(φ) = φ
+
+Es decir, una formula de 3-SAT se interpreta directamente como una formula de SAT.
+
+### Correccion
+
+Si φ es satisfacible en 3-SAT, entonces existe una interpretacion que satisface todas sus clausulas. Dado que φ es tambien una instancia valida de SAT, la misma interpretacion la satisface.
+
+Si φ no es satisfacible en 3-SAT, entonces ninguna interpretacion la satisface, por lo que tampoco es satisfacible como instancia de SAT.
+
+Por lo tanto, la reduccion preserva satisfacibilidad.
+
+### Complejidad
+
+La reduccion consiste unicamente en copiar la entrada, por lo que su complejidad es O(n), donde n es el tamaño de la formula.
+
+Por lo tanto, la reduccion es polinomial.
+
+Se concluye que:
+
+3-SAT ≤p SAT
+
+### Maquina de Turing
+
+Se define una maquina de Turing que implementa esta reduccion de la siguiente forma:
+
+1. La maquina recibe una formula de 3-SAT codificada en la cinta.
+2. Recorre la cinta de izquierda a derecha.
+3. Produce como salida una cinta que contiene exactamente la misma codificacion.
+4. Al finalizar la copia, la maquina se detiene.
+
+La salida obtenida corresponde a una instancia del problema SAT.
+
