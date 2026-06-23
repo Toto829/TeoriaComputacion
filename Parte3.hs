@@ -442,3 +442,58 @@ interpEj2 =
   ]
 
 
+-- =========================================================
+-- PROBLEMA B (planificacion) Codigo Generado con IA
+-- =========================================================
+
+data Tarea = Tarea Int Int
+  deriving Show
+  -- (i,j) representa literal j de la clausula i
+
+data Restriccion
+  = NoSimultaneo Tarea Tarea
+  deriving Show
+
+type InstanciaB = ([Tarea], [Restriccion])
+
+
+reduceAToB :: FormulaSAT -> InstanciaB
+reduceAToB formula =
+  let
+    tareas = construirTareas formula
+    restr1 = restriccionesClausulas formula
+    restr2 = restriccionesConflictos formula
+  in (tareas, restr1 ++ restr2)
+
+  construirTareas :: FormulaSAT -> [Tarea]
+construirTareas formula =
+  [ Tarea i j
+  | (i, clausula) <- zip [1..] formula
+  , (j, _) <- zip [1..] clausula
+  ]
+
+restriccionesClausulas :: FormulaSAT -> [Restriccion]
+restriccionesClausulas formula =
+  concat
+    [ [ NoSimultaneo (Tarea i j1) (Tarea i j2)
+      | (j1, _) <- zip [1..] clausula
+      , (j2, _) <- zip [1..] clausula
+      , j1 < j2
+      ]
+    | (i, clausula) <- zip [1..] formula
+    ]
+
+    restriccionesConflictos :: FormulaSAT -> [Restriccion]
+restriccionesConflictos formula =
+  [ NoSimultaneo (Tarea i j) (Tarea k l)
+  | (i, clausula1) <- zip [1..] formula
+  , (j, lit1) <- zip [1..] clausula1
+  , (k, clausula2) <- zip [1..] formula
+  , (l, lit2) <- zip [1..] clausula2
+  , conflicto lit1 lit2
+  ]
+
+conflicto :: LitSAT -> LitSAT -> Bool
+conflicto (PosSAT x) (NegSAT y) = x == y
+conflicto (NegSAT x) (PosSAT y) = x == y
+conflicto _ _ = False

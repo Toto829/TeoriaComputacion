@@ -149,3 +149,44 @@ Su codificacion en la cinta es:
 
 
 ␣ ␣ V:x1,x2|E:(x1t,x2f),(x2f,x1t)|w:((x1t,x2f),1),((x2f,x1t),1)|P:[]|X:[(x1f,x2t)]|k:10 ␣ ␣
+
+---
+## 2.3 NP-completitud del problema B
+
+Se demuestra que el problema B (Planificación cíclica con restricciones) es NP-completo.
+
+### B pertenece a NP
+
+El problema B pertenece a la clase NP, ya que dada una instancia y una solución candidata (una secuencia de estaciones), es posible verificar en tiempo polinomial si dicha solución es válida.
+
+En la Parte 1 se implementó la función `verifyB`, que verifica:
+
+- cobertura total,
+- consistencia de transiciones,
+- restricciones de precedencia,
+- exclusiones locales,
+- cota de costo.
+
+Todas estas verificaciones se realizan en tiempo polinomial, por lo que B ∈ NP.
+
+---
+
+### Reducción desde SAT
+
+En la sección 2.1 se definió una reducción polinomial:
+
+SAT ≤p B
+
+donde cada fórmula booleana se transforma en una instancia del problema de planificación, preservando satisfacibilidad.
+
+---
+
+### Conclusión
+
+Dado que:
+
+- SAT es NP-completo,
+- SAT ≤p B,
+- B ∈ NP,
+
+se concluye que el problema B es NP-completo.
