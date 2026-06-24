@@ -108,7 +108,7 @@ Dada una formula booleana `φ` en CNF, se construye una instancia del problema d
 - Las clausulas se traducen a restricciones que aseguran que al menos una de las decisiones asociadas a sus literales quede satisfecha. 
 - Se agregan restricciones de precedencia y exclusiones para impedir combinaciones inconsistentes. 
 - El grafo de transiciones se construye de modo que una secuencia valida corresponda a una interpretacion consistente de la formula. 
-
+---
 ### Correccion
 
 Si `φ` es satisfacible, entonces existe una asignacion de valores de verdad que satisface todas sus clausulas. A partir de esa asignacion, se puede construir una secuencia ciclica de estaciones que respeta las restricciones del problema `B`. 
@@ -117,10 +117,12 @@ Si `φ` no es satisfacible, entonces no existe una asignacion que satisfaga simu
 
 Por lo tanto, la reduccion preserva satisfacibilidad. 
 
+---
 ### Complejidad
 
 La construccion de la instancia de `B` requiere recorrer las variables y las clausulas de la formula una cantidad polinomial de veces, agregando para cada una un numero acotado de componentes y restricciones. En consecuencia, la reduccion tiene complejidad polinomial. 
 
+---
 ### Maquina de Turing
 
 Se especifica una maquina de Turing que implementa la reduccion de la siguiente forma: 
@@ -130,7 +132,7 @@ Se especifica una maquina de Turing que implementa la reduccion de la siguiente 
 3. Construye sobre la cinta una codificacion de la instancia correspondiente del problema `B`, incluyendo estaciones, transiciones, restricciones y cota de costo. 
 4. La construccion se realiza en tiempo polinomial respecto al tamaño de la entrada. 
 5. La maquina se detiene dejando en la cinta la instancia codificada de `B`. 
-
+---
 ### Ejemplo de ejecucion de la Maquina de Turing
 
 Sea la formula:
@@ -148,7 +150,85 @@ Su codificacion en la cinta es:
 #### Cinta final
 
 
-␣ ␣ V:x1,x2|E:(x1t,x2f),(x2f,x1t)|w:((x1t,x2f),1),((x2f,x1t),1)|P:[]|X:[(x1f,x2t)]|k:10 ␣ ␣
+␣ ␣ V:x1,x2 | E:[transiciones] | w:[costos] | P:[precedencias] | X:[exclusiones] | k:10 ␣ ␣
+                                                        
+
+el cabezal estaria al final de esta parte de la cinta
+
+---
+## 2.2 Teorema de Cook-Levin
+
+El teorema de Cook-Levin establece que el problema SAT es NP-completo.
+
+Esto significa que:
+
+- SAT pertenece a la clase NP.
+- Todo problema en NP puede reducirse en tiempo polinomial a SAT.
+
+Este resultado es fundamental en teoría de la complejidad, ya que demuestra la existencia de problemas NP-completos y permite clasificar la dificultad de otros problemas mediante reducciones.
+
+---
+
+### Prueba 1: Codificación de la Máquina de Turing
+
+La primera demostración se basa en el modelo de Máquina de Turing.
+
+Sea un lenguaje L ∈ NP. Por definición, existe una máquina de Turing no determinística M que decide L en tiempo polinomial.
+
+La idea de la prueba es construir, para cada instancia x, una fórmula booleana φ tal que:
+
+x ∈ L ⇔ φ es satisfacible.
+
+Para ello:
+
+- Se codifica la ejecución de la máquina M sobre la entrada x.
+- Se representa la cinta de la máquina como una tabla con filas (tiempo) y columnas (posiciones de la cinta).
+- Se introducen variables booleanas que representan:
+  - el símbolo en cada posición,
+  - el estado de la máquina,
+  - la posición del cabezal.
+
+Luego se construyen cláusulas que garantizan:
+
+- que la configuración inicial es correcta,
+- que cada paso sigue las reglas de transición de la máquina,
+- que se alcanza un estado de aceptación.
+
+La fórmula resultante es satisfacible si y solo si existe una ejecución válida de la máquina que acepta x.
+
+Dado que la construcción se realiza en tiempo polinomial, se concluye que:
+
+L ≤p SAT.
+
+---
+
+### Prueba 2: Verificadores y certificados
+
+Otra forma de demostrar el teorema se basa en la definición de NP mediante verificadores.
+
+Sea un lenguaje L ∈ NP. Entonces existe un verificador V que, dado un input x y un certificado y de tamaño polinomial, decide en tiempo polinomial si x pertenece a L.
+
+La idea es construir una fórmula booleana que simule la ejecución del verificador:
+
+- Se codifican las variables de entrada x y del certificado y.
+- Se representan los estados intermedios de la computación del verificador.
+- Se construyen cláusulas que expresan las operaciones del verificador paso a paso.
+
+La fórmula resultante es satisfacible si y solo si existe algún certificado y tal que V(x, y) acepta.
+
+Por lo tanto:
+
+x ∈ L ⇔ φ es satisfacible
+
+y la transformación se realiza en tiempo polinomial.
+
+---
+
+### Conclusión
+
+Ambas demostraciones establecen que cualquier problema en NP puede reducirse a SAT en tiempo polinomial.
+
+Dado además que SAT ∈ NP, se concluye que SAT es NP-completo.
 
 ---
 ## 2.3 NP-completitud del problema B
