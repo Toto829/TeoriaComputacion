@@ -152,7 +152,7 @@ igualdadNat :: P
 igualdadNat =
   Local ["a","b"] (
     Sec
-      (Assig ["res", "a", "b"] [trueE, Var "n1", Var "n2"])
+      (Assig ["resIgual", "a", "b"] [trueE, Var "n1", Var "n2"])
       (Sec
         (While "a" [
           ("suc", ["x"],
@@ -162,7 +162,7 @@ igualdadNat =
               ),
               ("O", [],
                 Sec
-                  (Assig ["res"] [falseE])
+                  (Assig ["resIgual"] [falseE])
                   (Assig ["a"] [oE])
               )
             ]
@@ -170,10 +170,10 @@ igualdadNat =
         ])
         (Case "b" [
           ("O", [],
-            Assig ["res"] [Var "res"]
+            Assig ["resIgual"] [Var "resIgual"]
           ),
           ("suc", ["y"],
-            Assig ["res"] [falseE]
+            Assig ["resIgual"] [falseE]
           )
         ])
       )
@@ -323,8 +323,7 @@ evaluarClausula =
                   
                   Assig ["litActual"] [Var "lit"]
 
-                , -
-                  evaluarLiteral
+                , evaluarLiteral
 
                 , 
                   Case "resLit"
@@ -465,7 +464,7 @@ reduceAToB formula =
     restr2 = restriccionesConflictos formula
   in (tareas, restr1 ++ restr2)
 
-  construirTareas :: FormulaSAT -> [Tarea]
+construirTareas :: FormulaSAT -> [Tarea]
 construirTareas formula =
   [ Tarea i j
   | (i, clausula) <- zip [1..] formula
@@ -483,7 +482,7 @@ restriccionesClausulas formula =
     | (i, clausula) <- zip [1..] formula
     ]
 
-    restriccionesConflictos :: FormulaSAT -> [Restriccion]
+restriccionesConflictos :: FormulaSAT -> [Restriccion]
 restriccionesConflictos formula =
   [ NoSimultaneo (Tarea i j) (Tarea k l)
   | (i, clausula1) <- zip [1..] formula
