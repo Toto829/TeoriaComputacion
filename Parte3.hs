@@ -445,6 +445,8 @@ interpEj2 =
 -- PROBLEMA B (planificacion) Codigo Generado con IA
 -- =========================================================
 
+{-
+
 data Tarea = Tarea Int Int
   deriving Show
   -- (i,j) representa literal j de la clausula i
@@ -496,3 +498,4 @@ conflicto :: LitSAT -> LitSAT -> Bool
 conflicto (PosSAT x) (NegSAT y) = x == y
 conflicto (NegSAT x) (PosSAT y) = x == y
 conflicto _ _ = False
+-}

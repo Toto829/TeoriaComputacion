@@ -30,64 +30,58 @@ La complejidad del algoritmo es:
 Esto se debe a que cada clausula recorre sus literales y, para evaluar cada literal, puede ser necesario recorrer linealmente la interpretacion para buscar el valor de una variable. Por lo tanto, el verificador opera en tiempo polinomial respecto al tamaño de la entrada. 
 
 ---
+## 1.2 Codificacion de B en Maquina de Turing
 
-## 1.2 Codificacion de A en Maquina de Turing
+En la primera parte del trabajo se definio el problema `B = Planificacion ciclica de tareas con restricciones`, cuya instancia tiene la forma:
 
-En la primera parte del trabajo se definio el problema `A = SAT`, donde una instancia consiste en una formula booleana en CNF y se pregunta si existe una asignacion de valores de verdad que la haga verdadera. Por lo tanto, para esta parte se toma `DomA` como el conjunto de formulas en CNF. 
+`I = (V, E, w, P, X, k)`
+
+donde:
+- `V` es el conjunto de estaciones,
+- `E` es el conjunto de transiciones permitidas,
+- `w` asigna un costo a cada transicion,
+- `P` es el conjunto de restricciones de precedencia,
+- `X` es el conjunto de exclusiones locales,
+- `k` es una cota maxima de costo. 【2-6d2962】
 
 ### Alfabeto
 
-Se define el alfabeto:
+Se define un alfabeto suficiente para codificar todos los componentes de una instancia de `B`:
 
-`Σ = {0, 1, p, n, #, ;}`
+`Σ_B = {0,1,V,E,W,P,X,K,(,),,,;,#}`
 
-donde: 
-
-- `1` representa el sucesor en la codificacion de numeros naturales. 
-- `0` representa el valor cero. 
-- `p` representa un literal positivo. 
-- `n` representa un literal negativo. 
-- `#` separa literales dentro de una clausula. 
-- `;` separa clausulas. 
+donde:
+- `0` y `1` se usan para codificar identificadores y costos,
+- `V,E,W,P,X,K` identifican cada componente de la instancia,
+- `(`, `)`, `,`, `;`, `#` se usan como separadores.
 
 ### Codificacion
 
-#### Variables
+Una instancia `I = (V,E,w,P,X,k)` se codifica como una cadena de la forma:
 
-Las variables se codifican como una secuencia de unos: 
+`V#cod(V);E#cod(E);W#cod(w);P#cod(P);X#cod(X);K#cod(k)`
 
-- `x1 -> 1` 
-- `x2 -> 11` 
-- `x3 -> 111` 
+donde cada subconjunto o relacion se representa como una lista separada por `;`, y cada elemento individual se representa usando identificadores de estaciones codificados en binario o unario (palitos como en clase o binario).
 
-#### Literales
+Por ejemplo, una instancia simple puede quedar representada como:
 
-Los literales se codifican agregando un prefijo segun su signo: 
-
-- `Pos(x2) -> p11` 
-- `Neg(x3) -> n111` 
-
-#### Clausula
-
-Una clausula se representa como una secuencia de literales separados por `#`. Por ejemplo: 
-
-`p1#n11#p111` 
-
-#### Formula CNF
-
-Una formula en CNF se representa como una secuencia de clausulas separadas por `;`. Por ejemplo: 
-
-`p1#n11#p111 ; n1#p11#p111 ; p11#p111` 
+`V#1;10;11;E#(1,10);(10,11);W#((1,10),1);((10,11),1);P#;X#;K#11`
 
 ### Maquina de Turing
 
-Se especifica una maquina de Turing que decide SAT del siguiente modo: 
+Se especifica una Maquina de Turing no determinista que resuelve `B` de la siguiente forma:
 
-1. La maquina recibe una formula codificada en la cinta. 
-2. Recorre la entrada e identifica las variables presentes. 
-3. Genera no deterministicamente una interpretacion. 
-4. Para cada clausula, verifica si al menos un literal es verdadero; si alguna clausula no tiene ningun literal verdadero, la maquina rechaza. 
-5. Si todas las clausulas resultan verdaderas, la maquina acepta. 
+1. Recibe una instancia `I = (V,E,w,P,X,k)` codificada en la cinta.
+2. Genera no deterministicamente una secuencia candidata de estaciones.
+3. Verifica que la secuencia:
+   - cubra todas las estaciones exactamente una vez,
+   - use solo transiciones de `E`,
+   - respete las restricciones de precedencia `P`,
+   - respete las exclusiones `X`,
+   - y tenga costo total menor o igual que `k`.
+4. Si todas las condiciones se cumplen, acepta. En caso contrario, rechaza.
+
+Como la verificacion de una secuencia candidata puede hacerse en tiempo polinomial, se concluye que `B` pertenece a NP.
 
 ---
 
@@ -146,7 +140,9 @@ Su codificacion en la cinta es:
 #### Cinta inicial
 
 ... ␣ ␣ p 1 # n 1 1 ␣ ␣ ...
-        ↑
+  
+Con cabezal en el primer elemento
+
 #### Cinta final
 
 
@@ -270,3 +266,15 @@ Dado que:
 - B ∈ NP,
 
 se concluye que el problema B es NP-completo.
+
+---
+
+### 2.4 Analisis del codigo generado por IA
+
+El codigo generado por IA nos parece bastante acertado: representar cada literal de cada clausula como una tarea y agregar restricciones para capturar incompatibilidades entre elecciones. En ese sentido, la funcion `conflicto` reconoce correctamente la oposicion entre un literal positivo y uno negativo sobre la misma variable.
+
+Sin embargo, el resultado no constituye una implementacion correcta de la reduccion pedida. El motivo principal es que no construye una instancia del problema `B` tal como fue definido en la Parte 1, es decir, una estructura de la forma `(V,E,w,P,X,k)`. En lugar de eso, devuelve un par `([Tarea], [Restriccion])`, que corresponde a otro problema de restricciones.
+
+Ademas, la funcion `restriccionesClausulas` impone incompatibilidades entre literales de una misma clausula, lo cual no coincide con SAT. En una clausula pueden ser verdaderos varios literales al mismo tiempo, solo se requiere que al menos uno lo sea. Por eso, la construccion no preserva correctamente la satisfacibilidad.
+
+---
