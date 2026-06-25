@@ -7,21 +7,23 @@ Leyenda: [ ] pendiente · [~] parcial · [x] hecho
 
 ---
 
-## FASE 0 — Arreglos de código (rápido, desbloquea todo)
+## FASE 0 — Arreglos de código (rápido, desbloquea todo) ✅ COMPLETA
 
-Hoy `Parte3.hs` NO compila, así que `verifySAT` no se pudo testear.
+Antes `Parte3.hs` NO compilaba, así que `verifySAT` no se pudo testear. Ya está arreglado.
 
-- [ ] **Línea 326** (`evaluarClausula`): quitar el guion suelto `, -` → debe quedar `, evaluarLiteral`.
-- [ ] **Línea 468:** `construirTareas :: ...` está indentada → llevar a la columna 1.
-- [ ] **Línea 486:** `restriccionesConflictos :: ...` está indentada → llevar a la columna 1.
-- [ ] **Bug `res`/`resIgual` en `verifySAT`:** `igualdadNat` escribe en `res` (líneas 155, 173, 176) pero `buscarEnInterp` lee `resIgual` (línea 230). Cambiar `igualdadNat` para que escriba en **`resIgual`**. Así se arregla la lectura de variable indefinida Y se evita pisar la salida final `res`.
-- [ ] Conseguir `Lab2.hs` (no está en la carpeta) y **compilar** `Parte3.hs`.
-- [ ] **Testear** `verifySAT`:
-  - `correrVerifySAT ej1 interpEj1Ok` → `True`
-  - `correrVerifySAT ej1 interpEj1No` → `False`
-  - `correrVerifySAT ej2 interpEj2` → `False` (es insatisfacible: pide x1 y ¬x1)
+- [x] **Línea 326** (`evaluarClausula`): se quitó el guion suelto `, -` → quedó `, evaluarLiteral`.
+- [x] **construirTareas** llevado a la columna 1.
+- [x] **restriccionesConflictos** llevado a la columna 1.
+- [x] **Bug `res`/`resIgual` en `verifySAT`:** `igualdadNat` ahora escribe en **`resIgual`** (líneas 155, 173, 176) y `buscarEnInterp` lo lee en `resIgual` (línea 230). Se arregla la lectura de variable indefinida y se deja de pisar la salida final `res`.
+- [x] **Compilación** de `Parte3.hs`: verificada con un intérprete `Lab2` reconstruido **localmente** (ver nota abajo). Compila sin errores.
+- [x] **Testeo** de `verifySAT` (los 3 dan lo esperado):
+  - `correrVerifySAT ej1 interpEj1Ok` → `True`  ✔ (`VCons "True" []`)
+  - `correrVerifySAT ej1 interpEj1No` → `False` ✔ (`VCons "False" []`)
+  - `correrVerifySAT ej2 interpEj2` → `False` ✔ (`VCons "False" []`)
 
-Criterio de hecho: el archivo compila y los 3 tests dan lo esperado.
+Criterio de hecho: el archivo compila y los 3 tests dan lo esperado. **CUMPLIDO.**
+
+> ⚠️ **Sobre `Lab2.hs`:** el `Lab2.hs` real (intérprete del lenguaje imperativo, de un lab anterior) sigue **sin estar en la carpeta**. La compilación y los tests se verificaron con una reconstrucción local del intérprete, que **no se commitea** (la regla de IA solo permite código de IA en 2.4). Antes de la entrega final hay que colocar el `Lab2.hs` propio en la carpeta para que el repo compile.
 
 ---
 
